@@ -1,0 +1,437 @@
+<!DOCTYPE html>
+<html lang="kk" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Санау жүйелері: Кешенді арифметика және тренажер</title>
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Merriweather:wght@400;700;900&family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        darkbg: '#0B1120',
+                        darkcard: '#1E293B',
+                        darkborder: '#334155',
+                        accent: '#2DD4BF', // Teal-400
+                        accentHover: '#14B8A6', // Teal-500
+                        borrow: '#F43F5E', // Rose-500
+                        accentBlue: '#38BDF8', // Sky-400
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        serif: ['Merriweather', 'serif'],
+                        mono: ['JetBrains Mono', 'monospace'],
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        body {
+            background-color: #0B1120;
+            color: #CBD5E1;
+            font-family: 'Inter', sans-serif;
+            background-image: radial-gradient(#1E293B 1px, transparent 1px);
+            background-size: 24px 24px;
+        }
+
+        .glass-card {
+            background: rgba(30, 41, 59, 0.75);
+            backdrop-filter: blur(12px);
+            border: 1px solid #334155;
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.3);
+            border-radius: 1rem;
+        }
+
+        .math-block {
+            display: inline-block;
+            text-align: right;
+            font-family: 'JetBrains Mono', monospace;
+            background: #0F172A;
+            padding: 1.25rem 1.75rem;
+            border-radius: 0.75rem;
+            border: 1px solid #334155;
+            font-size: 1.25rem;
+            line-height: 1.5;
+            color: #F8FAFC;
+        }
+
+        .tab-content { display: none; opacity: 0; transition: opacity 0.3s ease; }
+        .tab-content.active { display: block; opacity: 1; animation: slideUp 0.4s ease forwards; }
+
+        @keyframes slideUp {
+            from { transform: translateY(15px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+    </style>
+</head>
+<body class="flex flex-col min-h-screen">
+
+    <!-- HEADER & NAVIGATION -->
+    <header class="sticky top-0 z-50 bg-darkbg/95 backdrop-blur-md border-b border-darkborder shadow-lg">
+        <div class="container mx-auto px-4 lg:px-8 py-4">
+            <div class="flex flex-col lg:flex-row items-center justify-between gap-4">
+                <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 bg-accent text-darkbg rounded-lg flex items-center justify-center text-xl shadow-lg shadow-accent/20">
+                        <i class="fa-solid fa-calculator"></i>
+                    </div>
+                    <div>
+                        <h1 class="text-xl font-serif font-bold text-white">MathSys <span class="text-accent">Master</span></h1>
+                        <p class="text-xs text-slate-400 font-mono uppercase tracking-widest">Санау жүйелерінің тренажері</p>
+                    </div>
+                </div>
+                
+                <nav class="flex flex-wrap justify-center gap-2 bg-darkcard p-1 rounded-lg border border-darkborder">
+                    <button onclick="switchTab('tab-theory')" id="btn-tab-theory" class="nav-btn px-4 py-2 rounded-md font-medium text-sm transition-colors text-white bg-slate-700 shadow">Теория</button>
+                    <button onclick="switchTab('tab-mixed')" id="btn-tab-mixed" class="nav-btn px-4 py-2 rounded-md font-medium text-sm transition-colors text-slate-400 hover:text-white hover:bg-slate-700/50">1-Бөлім (20 Аралас есеп)</button>
+                    <button onclick="switchTab('tab-single')" id="btn-tab-single" class="nav-btn px-4 py-2 rounded-md font-medium text-sm transition-colors text-slate-400 hover:text-white hover:bg-slate-700/50">2-Бөлім (30 Жеке есеп)</button>
+                    <button onclick="switchTab('tab-generator')" id="btn-tab-generator" class="nav-btn px-4 py-2 rounded-md font-medium text-sm transition-colors text-accent hover:bg-accent/10 border-l border-darkborder"><i class="fa-solid fa-bolt mr-1"></i> Тренажер & Тексеру</button>
+                </nav>
+            </div>
+        </div>
+    </header>
+
+    <main class="flex-grow container mx-auto px-4 lg:px-8 py-10">
+
+        <!-- ================= 1. THEORY SECTION ================= -->
+        <section id="tab-theory" class="tab-content active space-y-10">
+            <div class="text-center max-w-3xl mx-auto">
+                <h2 class="text-3xl md:text-4xl font-serif font-bold text-white mb-4">Арифметикалық амалдардың академиялық негіздері</h2>
+                <p class="text-slate-400 text-base leading-relaxed">
+                    Екілік (2), сегіздік (8) және он алтылық (16) санау жүйелеріндегі есептеулердің ережелері мен разрядтан өту құпиялары.
+                </p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div class="glass-card p-6 border-t-4 border-t-accent">
+                    <div class="text-2xl font-bold font-mono text-accent mb-2">01. Екілік жүйе (Base 2)</div>
+                    <p class="text-sm text-slate-300 mb-4">Цифрлар: <strong class="text-white">0, 1</strong></p>
+                    <ul class="text-sm text-slate-400 space-y-2 font-mono">
+                        <li>1 + 1 = 10 (0 жаз, 1 ойда)</li>
+                        <li>10 - 1 = 1 (қарыз 2 боп келеді)</li>
+                        <li>Көбейту мен бөлу ондық сияқты.</li>
+                    </ul>
+                </div>
+
+                <div class="glass-card p-6 border-t-4 border-t-accentBlue">
+                    <div class="text-2xl font-bold font-mono text-accentBlue mb-2">02. Сегіздік жүйе (Base 8)</div>
+                    <p class="text-sm text-slate-300 mb-4">Цифрлар: <strong class="text-white">0-ден 7-ге дейін</strong></p>
+                    <ul class="text-sm text-slate-400 space-y-2 font-mono">
+                        <li>Қосынды ≥ 8 болса, 8-ді азайтып, 1 ойда сақтаймыз.</li>
+                        <li>Қарыз алғанда көршіден <strong class="text-white">8</strong> келеді.</li>
+                    </ul>
+                </div>
+
+                <div class="glass-card p-6 border-t-4 border-t-purple-400">
+                    <div class="text-2xl font-bold font-mono text-purple-400 mb-2">03. Он алтылық жүйе (Base 16)</div>
+                    <p class="text-sm text-slate-300 mb-4">Цифрлар: <strong class="text-white">0-9 және A(10)-F(15)</strong></p>
+                    <ul class="text-sm text-slate-400 space-y-2 font-mono">
+                        <li>Қосынды ≥ 16 болса, 16 азайтылып, 1 ойда қалады.</li>
+                        <li>Қарыз алғанда <strong class="text-white">16</strong> келеді.</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- ================= 2. MIXED PROBLEMS SECTION (20 ITEMS) ================= -->
+        <section id="tab-mixed" class="tab-content space-y-8">
+            <div class="flex flex-col md:flex-row justify-between items-center gap-4 border-b border-darkborder pb-6">
+                <div>
+                    <h2 class="text-3xl font-serif font-bold text-white mb-2">1-Бөлім: Аралас санау жүйелеріндегі есептер</h2>
+                    <p class="text-slate-400 text-sm">Бұл бөлімде әртүрлі жүйелердің мәндерін өзара біріктіріп есептеу тапсырмалары берілген.</p>
+                </div>
+                <button onclick="toggleAllAnswers('mixed')" class="bg-darkcard hover:bg-slate-700 text-accent font-semibold px-4 py-2 rounded-lg border border-darkborder transition-colors text-sm">Барлық жауапты ашу/жабу</button>
+            </div>
+
+            <div id="mixed-grid" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <!-- Injected via JavaScript for 20 items -->
+            </div>
+        </section>
+
+        <!-- ================= 3. SINGLE SYSTEM PROBLEMS SECTION (30 ITEMS) ================= -->
+        <section id="tab-single" class="tab-content space-y-8">
+            <div class="flex flex-col md:flex-row justify-between items-center gap-4 border-b border-darkborder pb-6">
+                <div>
+                    <h2 class="text-3xl font-serif font-bold text-white mb-2">2-Бөлім: Жеке жүйелер бойынша 30 есеп</h2>
+                    <p class="text-slate-400 text-sm">Әр санау жүйесіне арналған қосу, азайту, көбейту және бөлу есептері.</p>
+                </div>
+                <button onclick="toggleAllAnswers('single')" class="bg-darkcard hover:bg-slate-700 text-accent font-semibold px-4 py-2 rounded-lg border border-darkborder transition-colors text-sm">Барлық жауапты ашу/жабу</button>
+            </div>
+
+            <div class="space-y-6">
+                <h3 class="text-xl font-serif font-bold text-accent"><i class="fa-solid fa-2 mr-2"></i> Екілік жүйедегі есептер (1-10)</h3>
+                <div id="single-binary-grid" class="grid grid-cols-1 md:grid-cols-2 gap-4"></div>
+
+                <h3 class="text-xl font-serif font-bold text-accentBlue pt-6"><i class="fa-solid fa-8 mr-2"></i> Сегіздік жүйедегі есептер (11-20)</h3>
+                <div id="single-octal-grid" class="grid grid-cols-1 md:grid-cols-2 gap-4"></div>
+
+                <h3 class="text-xl font-serif font-bold text-purple-400 pt-6"><span class="font-mono">16</span> Он алтылық жүйедегі есептер (21-30)</h3>
+                <div id="single-hex-grid" class="grid grid-cols-1 md:grid-cols-2 gap-4"></div>
+            </div>
+        </section>
+
+        <!-- ================= 4. GENERATOR & CHECKER SECTION ================= -->
+        <section id="tab-generator" class="tab-content">
+            <div class="max-w-3xl mx-auto glass-card p-8 shadow-2xl border-t-4 border-t-accent">
+                <div class="text-center mb-8">
+                    <h2 class="text-3xl font-serif font-bold text-white mb-2"><i class="fa-solid fa-wand-magic-sparkles text-accent mr-2"></i> Тренажер және Тексеруші</h2>
+                    <p class="text-slate-400 text-sm">Өз бетіңізше кездейсоқ есеп генерациялап, жауабын тексеріңіз.</p>
+                </div>
+
+                <div class="bg-darkbg p-6 rounded-xl border border-darkborder space-y-6">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-xs font-bold text-slate-400 mb-2 uppercase tracking-wider">Санау жүйесі:</label>
+                            <select id="gen-base" class="w-full bg-darkcard border border-darkborder rounded-lg p-3 text-white font-mono focus:outline-none focus:border-accent">
+                                <option value="2">Екілік (2)</option>
+                                <option value="8">Сегіздік (8)</option>
+                                <option value="16">Он алтылық (16)</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-xs font-bold text-slate-400 mb-2 uppercase tracking-wider">Амал түрі:</label>
+                            <select id="gen-op" class="w-full bg-darkcard border border-darkborder rounded-lg p-3 text-white font-mono focus:outline-none focus:border-accent">
+                                <option value="+">Қосу (+)</option>
+                                <option value="-">Азайту (-)</option>
+                                <option value="*">Көбейту (×)</option>
+                                <option value="/">Бөлу (÷)</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <button onclick="generateNewProblem()" class="w-full bg-slate-700 hover:bg-slate-600 text-white font-bold py-3 rounded-lg transition-colors border border-darkborder">
+                        <i class="fa-solid fa-rotate mr-2"></i> Жаңа есеп шығару
+                    </button>
+
+                    <!-- Problem Display Area -->
+                    <div id="gen-problem-box" class="hidden text-center py-6 border-t border-b border-darkborder space-y-4">
+                        <p class="text-slate-400 text-xs uppercase tracking-widest">Тапсырма:</p>
+                        <div id="gen-problem-text" class="font-mono text-3xl font-bold text-white tracking-widest"></div>
+                        
+                        <div class="flex gap-3 max-w-md mx-auto pt-2">
+                            <input type="text" id="gen-user-answer" placeholder="Жауапты енгізіңіз..." autocomplete="off" class="flex-grow bg-darkcard border border-darkborder rounded-lg px-4 py-3 text-white font-mono text-xl uppercase focus:outline-none focus:border-accent">
+                            <button onclick="checkUserAnswer()" class="bg-accent hover:bg-accentHover text-darkbg font-bold px-6 py-3 rounded-lg transition-colors shadow-lg shadow-accent/20">Тексеру</button>
+                        </div>
+
+                        <div id="gen-feedback" class="hidden font-medium text-sm pt-2"></div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <footer class="mt-auto border-t border-darkborder bg-darkbg py-6 text-center">
+        <p class="text-slate-500 font-mono text-sm">© 2026 Информатика | Санау жүйелерінің арифметикасы</p>
+    </footer>
+
+    <script>
+        // Tab switching
+        function switchTab(tabId) {
+            document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+            document.querySelectorAll('.nav-btn').forEach(el => {
+                if(el.id === 'btn-' + tabId) {
+                    el.className = 'nav-btn px-4 py-2 rounded-md font-medium text-sm transition-colors text-accent hover:bg-accent/10 border-l border-darkborder';
+                    if(tabId === 'tab-theory') el.className = 'nav-btn px-4 py-2 rounded-md font-medium text-sm transition-colors text-white bg-slate-700 shadow';
+                } else {
+                    el.className = 'nav-btn px-4 py-2 rounded-md font-medium text-sm transition-colors text-slate-400 hover:text-white hover:bg-slate-700/50';
+                }
+            });
+            document.getElementById(tabId).classList.add('active');
+        }
+
+        // ================= DATA GENERATION =================
+
+        // PART 1: 20 Mixed System Problems
+        const mixedProblems = [
+            { q: "1011₂ + 35₈", ans: "110010₂ (немесе 62₈)" },
+            { q: "1FC₁₆ - 1101101₂", ans: "1E3₁₆" },
+            { q: "74₈ + A5₁₆", ans: "1B1₁₆" },
+            { q: "10101₂ × 10₂ - 15₈", ans: "27₈" },
+            { q: "3C₁₆ / 3₈ + 101₂", ans: "19₁₀ немесе 13₁₆" },
+            { q: "11011₂ + 24₈ + A₁₆", ans: "63₁₀" },
+            { q: "FF₁₆ - 1111111₂", ans: "80₁₆" },
+            { q: "55₈ + 55₁₆", ans: "E0₁₆" },
+            { q: "1000₂ × 4₈", ans: "200₈" },
+            { q: "A0₁₆ / 2 - 1001₂", ans: "4B₁₆" },
+            { q: "111₂ + 7₈ + 1₁₆", ans: "17₁₀" },
+            { q: "2E₁₆ - 12₈", ans: "22₁₆" },
+            { q: "10110₂ + 12₈", ans: "100100₂" },
+            { q: "B2₁₆ + 1010₂", ans: "BC₁₆" },
+            { q: "67₈ - 11001₂", ans: "36₈" },
+            { q: "1001₂ × 3₈", ans: "213₈" },
+            { q: "5A₁₆ / 2 + 3₈", ans: "30₁₆" },
+            { q: "1111₂ + 17₈ + F₁₆", ans: "47₁₀" },
+            { q: "33₈ + 33₁₆", ans: "69₁₆" },
+            { q: "(1011₂ + 5₈) × 2", ans: "50₈" }
+        ];
+
+        // PART 2: 30 Single System Problems (10 Binary, 10 Octal, 10 Hex)
+        const singleBinary = [
+            { q: "1011₂ + 110₂", ans: "10001₂" },
+            { q: "1101₂ + 1011₂", ans: "11000₂" },
+            { q: "1100₂ - 101₂", ans: "111₂" },
+            { q: "10000₂ - 111₂", ans: "1001₂" },
+            { q: "101₂ × 11₂", ans: "1111₂" },
+            { q: "110₂ × 101₂", ans: "11110₂" },
+            { q: "1100₂ / 11₂", ans: "100₂" },
+            { q: "10010₂ / 10₂", ans: "1001₂" },
+            { q: "1111₂ + 1₂ - 10₂", ans: "1110₂" },
+            { q: "(101₂ + 11₂) × 10₂", ans: "1000₂" }
+        ];
+
+        const singleOctal = [
+            { q: "37₈ + 45₈", ans: "104₈" },
+            { q: "124₈ + 57₈", ans: "203₈" },
+            { q: "134₈ - 57₈", ans: "55₈" },
+            { q: "205₈ - 46₈", ans: "137₈" },
+            { q: "15₈ × 4₈", ans: "64₈" },
+            { q: "23₈ × 5₈", ans: "137₈" },
+            { q: "64₈ / 4₈", ans: "15₈" },
+            { q: "144₈ / 6₈", ans: "20₈" },
+            { q: "77₈ + 1₈", ans: "100₈" },
+            { q: "50₈ - 12₈", ans: "36₈" }
+        ];
+
+        const singleHex = [
+            { q: "A5₁₆ + 2B₁₆", ans: "D0₁₆" },
+            { q: "3E₁₆ + 4D₁₆", ans: "8B₁₆" },
+            { q: "1C4₁₆ - 89₁₆", ans: "13B₁₆" },
+            { q: "A1₁₆ - 2F₁₆", ans: "72₁₆" },
+            { q: "F₁₆ × 2₁₆", ans: "1E₁₆" },
+            { q: "1A₁₆ × 3₁₆", ans: "4E₁₆" },
+            { q: "28₁₆ / 4₁₆", ans: "A₁₆" },
+            { q: "3C₁₆ / A₁₆", ans: "6₁₆" },
+            { q: "FF₁₆ + 1₁₆", ans: "100₁₆" },
+            { q: "100₁₆ - A₁₆", ans: "F6₁₆" }
+        ];
+
+        // Render problems into DOM
+        function renderProblems() {
+            // Mixed
+            const mixedContainer = document.getElementById('mixed-grid');
+            mixedContainer.innerHTML = mixedProblems.map((item, idx) => `
+                <div class="glass-card p-4 flex flex-col justify-between">
+                    <div class="flex justify-between items-center mb-2">
+                        <span class="text-xs font-mono text-slate-400">#${idx+1} Аралас есеп</span>
+                    </div>
+                    <div class="font-mono text-xl text-white my-2">${item.q}</div>
+                    <div>
+                        <button onclick="toggleAns('mixed-${idx}')" class="text-xs text-accent hover:underline mb-2 inline-block"><i class="fa-solid fa-eye mr-1"></i> Жауабын көрсету</button>
+                        <div id="mixed-${idx}" class="hidden font-mono text-sm text-emerald-400 bg-darkbg p-2 rounded border border-darkborder mt-1">Жауабы: ${item.ans}</div>
+                    </div>
+                </div>
+            `).join('');
+
+            // Single Binary
+            document.getElementById('single-binary-grid').innerHTML = singleBinary.map((item, idx) => renderSingleCard(item, idx, 'bin')).join('');
+            // Single Octal
+            document.getElementById('single-octal-grid').innerHTML = singleOctal.map((item, idx) => renderSingleCard(item, idx+10, 'oct')).join('');
+            // Single Hex
+            document.getElementById('single-hex-grid').innerHTML = singleHex.map((item, idx) => renderSingleCard(item, idx+20, 'hex')).join('');
+        }
+
+        function renderSingleCard(item, idx, prefix) {
+            return `
+                <div class="glass-card p-4 flex flex-col justify-between">
+                    <div class="text-xs font-mono text-slate-400 mb-1">Есеп #${idx+1}</div>
+                    <div class="font-mono text-xl text-white my-2">${item.q}</div>
+                    <div>
+                        <button onclick="toggleAns('${prefix}-${idx}')" class="text-xs text-accent hover:underline mb-2 inline-block"><i class="fa-solid fa-eye mr-1"></i> Жауабын көрсету</button>
+                        <div id="${prefix}-${idx}" class="hidden font-mono text-sm text-emerald-400 bg-darkbg p-2 rounded border border-darkborder mt-1">Жауабы: ${item.ans}</div>
+                    </div>
+                </div>
+            `;
+        }
+
+        function toggleAns(id) {
+            const el = document.getElementById(id);
+            el.classList.toggle('hidden');
+        }
+
+        function toggleAllAnswers(section) {
+            let selector = section === 'mixed' ? '[id^="mixed-"]' : '[id^="bin-"], [id^="oct-"], [id^="hex-"]';
+            const elements = document.querySelectorAll(selector);
+            const isHidden = Array.from(elements).some(el => el.classList.contains('hidden'));
+            elements.forEach(el => {
+                if(isHidden) el.classList.remove('hidden');
+                else el.classList.add('hidden');
+            });
+        }
+
+        // ================= GENERATOR & CHECKER LOGIC =================
+        let currentGenResult = "";
+        let currentGenBase = 2;
+
+        function getRandomInt(min, max) {
+            return Math.floor(Math.random() * (max - min + 1)) + min;
+        }
+
+        function generateNewProblem() {
+            const base = parseInt(document.getElementById('gen-base').value);
+            const op = document.getElementById('gen-op').value;
+            currentGenBase = base;
+
+            let maxVal = base === 2 ? 15 : (base === 8 ? 63 : 127);
+            let v1 = getRandomInt(2, maxVal);
+            let v2 = getRandomInt(1, maxVal);
+
+            if(op === '-' && v1 < v2) {
+                let temp = v1; v1 = v2; v2 = temp;
+            }
+            if(op === '/') {
+                v2 = getRandomInt(2, 8);
+                let quotient = getRandomInt(2, 8);
+                v1 = v2 * quotient;
+            }
+
+            let s1 = v1.toString(base).toUpperCase();
+            let s2 = v2.toString(base).toUpperCase();
+            let resDec;
+
+            switch(op) {
+                case '+': resDec = v1 + v2; break;
+                case '-': resDec = v1 - v2; break;
+                case '*': resDec = v1 * v2; break;
+                case '/': resDec = Math.floor(v1 / v2); break;
+            }
+
+            currentGenResult = resDec.toString(base).toUpperCase();
+
+            document.getElementById('gen-problem-text').innerHTML = `${s1}<sub>${base}</sub> ${op} ${s2}<sub>${base}</sub> = ?`;
+            document.getElementById('gen-user-answer').value = '';
+            document.getElementById('gen-feedback').classList.add('hidden');
+            document.getElementById('gen-problem-box').classList.remove('hidden');
+            document.getElementById('gen-user-answer').focus();
+        }
+
+        function checkUserAnswer() {
+            const userIn = document.getElementById('gen-user-answer').value.trim().toUpperCase();
+            const feedback = document.getElementById('gen-feedback');
+            feedback.classList.remove('hidden');
+
+            // Clean up possible sub-scripts or spaces typed by user
+            let cleanUser = userIn.replace(/[_₀₁₂₃₄₅₆₇₈₉0-9]+$/, '').trim(); // basic cleanup
+            // Better: just direct string comparison after trimming base indicators if any
+            let target = currentGenResult;
+
+            if(userIn === target || userIn === target + "₂" || userIn === target + "₈" || userIn === target + "₁₆") {
+                feedback.innerHTML = `<span class="text-emerald-400"><i class="fa-solid fa-circle-check mr-1"></i> Дұрыс! Тамаша!</span>`;
+            } else {
+                feedback.innerHTML = `<span class="text-borrow"><i class="fa-solid fa-circle-xmark mr-1"></i> Қате. Дұрыс жауап: ${target}</span>`;
+            }
+        }
+
+        // Initialize on load
+        window.onload = function() {
+            renderProblems();
+        }
+    </script>
+</body>
+</html>
